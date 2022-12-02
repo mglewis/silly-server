@@ -1,3 +1,9 @@
+Start silly http server:
+
+```
+cargo run
+```
+
 Hit silly endpoint:
 
 ```
