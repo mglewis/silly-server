@@ -6,6 +6,7 @@ networks:
     
 volumes:
   prometheus_data: {}
+  alertmanager_data: {}
 
 services:
   grafana:
@@ -13,6 +14,9 @@ services:
     ports:
       - 3000:3000
     user: '104'
+    networks:
+      - monitoring
+  
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -20,7 +24,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/etc/prometheus
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -30,5 +34,26 @@ services:
       - '--web.enable-lifecycle'
     expose:
       - 9090
+    networks:
+      - monitoring
+  
+  alertmanager:
+    image: prom/alertmanager:v0.23.0
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - "./alertmanager.yml:/config/alertmanager.yml"
+      - alertmanager_data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=debug
+  
+  pushgateway:
+    image: prom/pushgateway
+    container_name: pushgateway
+    restart: unless-stopped
+    expose:
+      - 9091
+    ports:
+      - "9091:9091"
     networks:
       - monitoring

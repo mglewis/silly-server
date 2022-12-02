@@ -1,0 +1,10 @@
+groups:
+- name: traffic
+  rules:
+  - alert: HighTraffic
+    expr: silly_requests > 10
+    for: 10m
+    labels:
+      severity: page
+    annotations:
+      summary: Loads of requests
