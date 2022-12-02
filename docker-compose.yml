@@ -43,7 +43,7 @@ services:
     ports:
       - "9093:9093"
     volumes:
-      - "./alertmanager.yml:/config/alertmanager.yml"
+      - "./prometheus/alertmanager.yml:/config/alertmanager.yml"
       - alertmanager_data:/data
     command: --config.file=/config/alertmanager.yml --log.level=debug
   
